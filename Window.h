@@ -1,12 +1,16 @@
-#pragma once
+﻿#pragma once
 #include "stdafx.h"
 
 class Window {
 private :
+	inline static NOTIFYICONDATA notifyData;
+
 	int width;
 	int height;
 
-	std::unique_ptr<HWND> hWnd;
+	HWND hWnd;
+	WNDCLASSEX wndClass;
+
 	HINSTANCE hInstance;
 	int nCmdShow;
 public :

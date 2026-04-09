@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="AmazingMouse.vcxproj" />
+  <Project Path="AmazingMouse.vcxproj" Id="e51e757e-f01c-46f9-9020-8d8d24c40170" />
 </Solution>
