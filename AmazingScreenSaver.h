@@ -2,16 +2,16 @@
 #include "stdafx.h"
 #include "Window.h"
 
-class AmazingMouse {
+class AmazingScreenSaver {
 private :
 	HINSTANCE hInstance;
 	int nCmdShow;
 
 	std::unique_ptr<Window> window;
 public :
-	AmazingMouse() = delete;
-	AmazingMouse(HINSTANCE hInstance, int nCmdShow);
-	~AmazingMouse();
+	AmazingScreenSaver() = delete;
+	AmazingScreenSaver(HINSTANCE hInstance, int nCmdShow);
+	~AmazingScreenSaver();
 
 	HRESULT InitApplication();
 	int DoMainLoop();

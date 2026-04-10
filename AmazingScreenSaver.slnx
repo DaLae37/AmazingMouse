@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="AmazingMouse.vcxproj" Id="e51e757e-f01c-46f9-9020-8d8d24c40170" />
+  <Project Path="AmazingScreenSaver.vcxproj" Id="c7e7b8d7-920d-40e8-8849-9caec623de25" />
 </Solution>

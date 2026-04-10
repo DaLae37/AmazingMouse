@@ -1,5 +1,5 @@
 ﻿#pragma once
-#define PROGRAM_NAME L"Amazing Mouse"
+#define PROGRAM_NAME L"Amazing Screen Saver"
 #define WM_APP 0x8000
 #define WM_APP_TRAYMSG (WM_APP + 1)
 

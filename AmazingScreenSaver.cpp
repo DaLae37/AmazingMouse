@@ -1,16 +1,16 @@
 ﻿#include "stdafx.h"
-#include "AmazingMouse.h"
+#include "AmazingScreenSaver.h"
 
-AmazingMouse::AmazingMouse(HINSTANCE hInstance, int nCmdShow) {
+AmazingScreenSaver::AmazingScreenSaver(HINSTANCE hInstance, int nCmdShow) {
 	this->hInstance = hInstance;
 	this->nCmdShow = nCmdShow;
 }
 
-AmazingMouse::~AmazingMouse() {
+AmazingScreenSaver::~AmazingScreenSaver() {
 
 }
 
-HRESULT AmazingMouse::InitApplication() {
+HRESULT AmazingScreenSaver::InitApplication() {
 	window = std::make_unique<Window>(hInstance, nCmdShow, 500, 500);
 
 	// Init WindowsAPI
@@ -28,7 +28,7 @@ HRESULT AmazingMouse::InitApplication() {
 	return S_OK;
 }
 
-int AmazingMouse::DoMainLoop() {
+int AmazingScreenSaver::DoMainLoop() {
 	MSG Message = { 0, };
 
 	while (Message.message != WM_QUIT) {
