@@ -42,3 +42,25 @@ int AmazingScreenSaver::DoMainLoop() {
 	}
 	return static_cast<int>(Message.wParam);
 }
+
+void AmazingScreenSaver::InitDeltaTime() {
+	QueryPerformanceCounter(&beforeInterval);
+	QueryPerformanceCounter(&currentInterval);
+	QueryPerformanceFrequency(&frequency);
+}
+
+double AmazingScreenSaver::getDeltaTime() {
+	QueryPerformanceCounter(&currentInterval);
+
+	LONGLONG interval = (currentInterval.QuadPart - beforeInterval.QuadPart);
+	double deltaTime = 0;
+	if (frequency.QuadPart > 0) {
+		deltaTime = static_cast<double>(interval) / static_cast<double>(frequency.QuadPart);
+	}
+	else {
+		deltaTime = 0;
+	}
+	beforeInterval = currentInterval;
+
+	return deltaTime;
+}

@@ -7,6 +7,7 @@
 #include <windows.h>
 #include <shellapi.h>
 
+#include <stdexcept>
 #include <memory>
 #include <string>
 

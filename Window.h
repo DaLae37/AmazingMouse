@@ -18,7 +18,7 @@ public :
 	Window(HINSTANCE hInstance, int nCmdShow, const int width, const int height);
 	~Window();
 
-	static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	inline static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	HRESULT InitWindow();
 	HRESULT FloatWindow();
 };

@@ -7,7 +7,9 @@ private :
 	HINSTANCE hInstance;
 	int nCmdShow;
 
-	std::unique_ptr<Window> window;
+	std::unique_ptr<Window> window = nullptr;
+
+	LARGE_INTEGER beforeInterval, currentInterval, frequency;
 public :
 	AmazingScreenSaver() = delete;
 	AmazingScreenSaver(HINSTANCE hInstance, int nCmdShow);
@@ -15,4 +17,7 @@ public :
 
 	HRESULT InitApplication();
 	int DoMainLoop();
+
+	void InitDeltaTime();
+	double getDeltaTime();
 };
