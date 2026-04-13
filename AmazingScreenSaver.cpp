@@ -14,7 +14,7 @@ AmazingScreenSaver::~AmazingScreenSaver() {
 }
 
 HRESULT AmazingScreenSaver::InitApplication() {
-	window = std::make_unique<Window>(hInstance, nCmdShow, 300, 250);
+	window = std::make_unique<Window>(hInstance, nCmdShow, 300, 200);
 
 	// Init WindowsAPI
 	if (window->InitWindow() != S_OK) {
@@ -51,20 +51,10 @@ int AmazingScreenSaver::DoMainLoop() {
 }
 
 void AmazingScreenSaver::ProcessAutoMouse(double detaTime) {
-	POINT pos = InputManagerInstance->GetMousePosition();
-	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-
-	// 마우스가 한 쪽으로 몰렸을 때
-	if (pos.x <= 0 || pos.y <= 0 || pos.x > screenWidth || pos.y > screenHeight) {
-		// 마우스를 화면 한가운데로
-		SetCursorPos(screenWidth / 2, screenHeight / 2);
-	}
-
 	if (window->getIsActivate()) {
 		timer += detaTime;
-
 		if (timer >= window->getIntervalSeconds()) {
+			POINT pos = InputManagerInstance->GetMousePosition();
 			if (GetCursorPos(&pos)) {
 				if (window->getIsRandomMode()) {
 					// 랜덤 설정
@@ -75,12 +65,23 @@ void AmazingScreenSaver::ProcessAutoMouse(double detaTime) {
 					int nextX = pos.x + dis(gen);
 					int nextY = pos.y + dis(gen);
 
+					// 듀얼모니터 고려
+					int screenLeft = GetSystemMetrics(SM_XVIRTUALSCREEN);
+					int screenTop = GetSystemMetrics(SM_YVIRTUALSCREEN);
+					int screenRight = screenLeft + GetSystemMetrics(SM_CXVIRTUALSCREEN);
+					int screenButtom = screenTop + GetSystemMetrics(SM_CYVIRTUALSCREEN);
+
+					if (nextX <= screenLeft || nextY <= screenTop || nextX >= screenRight - 1 || nextY >= screenButtom - 1) {
+						// 메인모니터 센터로 보내기
+						nextX = GetSystemMetrics(SM_CXSCREEN) / 2;
+						nextY = GetSystemMetrics(SM_CYSCREEN) / 2;
+					}
+
 					SetCursorPos(nextX, nextY);
 				}
 				else {
 					// 고정 모드: 왼쪽으로 1px 이동 후, 원래 자리로 복귀
 					SetCursorPos(pos.x - 1, pos.y);
-					Sleep(30);
 					SetCursorPos(pos.x, pos.y);
 				}
 			}

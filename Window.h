@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "stdafx.h"
+#include "InputManager.h"
 
 class Window {
 private:
@@ -15,7 +16,20 @@ private:
 	NOTIFYICONDATA notifyData;
 
 	HFONT hFont;
+	HMENU hMenuTray;
 	HWND hWnd, hEditInterval, hTextInterval, hCheckRandom, hButtonStart, hTextWarning;
+
+	enum class WINDOW_UI {
+		EDIT_INTERVAL = 2001,
+		CHECK_RANDOM,
+		BUTTON_START
+	};
+
+	enum class TRAY_MENU {
+		ACTIVATE = 3001,
+		SETTING,
+		EXIT
+	};
 
 public:
 	Window() = delete;
@@ -30,6 +44,8 @@ public:
 	HRESULT InitTray();
 	HRESULT FloatWindow();
 
+	void Hide();
+	void Activate();
 	void Deactivate();
 
 	bool getIsActivate() const;
