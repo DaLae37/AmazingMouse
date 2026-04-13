@@ -5,6 +5,7 @@ AmazingScreenSaver::AmazingScreenSaver(HINSTANCE hInstance, int nCmdShow) {
 	this->hInstance = hInstance;
 	this->nCmdShow = nCmdShow;
 
+	lastPos = InputManagerInstance->GetMousePosition();
 	timer = 0.0;
 	InitDeltaTime();
 }
@@ -51,10 +52,16 @@ int AmazingScreenSaver::DoMainLoop() {
 }
 
 void AmazingScreenSaver::ProcessAutoMouse(double detaTime) {
+	POINT pos = InputManagerInstance->GetMousePosition();
 	if (window->getIsActivate()) {
-		timer += detaTime;
+		if (pos.x == lastPos.x && pos.y == lastPos.y) {
+			timer += detaTime;
+		}
+		else {
+			timer = 0.0;
+		}
+
 		if (timer >= window->getIntervalSeconds()) {
-			POINT pos = InputManagerInstance->GetMousePosition();
 			if (GetCursorPos(&pos)) {
 				if (window->getIsRandomMode()) {
 					// 랜덤 설정
@@ -62,27 +69,41 @@ void AmazingScreenSaver::ProcessAutoMouse(double detaTime) {
 					static std::mt19937 gen(rd());
 					std::uniform_int_distribution<int> dis(-50, 50); // -50 ~ 50px 사이 랜덤
 
-					int nextX = pos.x + dis(gen);
-					int nextY = pos.y + dis(gen);
+					int dx = dis(gen);
+					int dy = dis(gen);
+					int nextX = pos.x + dx;
+					int nextY = pos.y + dy;
 
 					// 듀얼모니터 고려
 					int screenLeft = GetSystemMetrics(SM_XVIRTUALSCREEN);
 					int screenTop = GetSystemMetrics(SM_YVIRTUALSCREEN);
 					int screenRight = screenLeft + GetSystemMetrics(SM_CXVIRTUALSCREEN);
-					int screenButtom = screenTop + GetSystemMetrics(SM_CYVIRTUALSCREEN);
+					int screenBottom = screenTop + GetSystemMetrics(SM_CYVIRTUALSCREEN);
 
-					if (nextX <= screenLeft || nextY <= screenTop || nextX >= screenRight - 1 || nextY >= screenButtom - 1) {
-						// 메인모니터 센터로 보내기
-						nextX = GetSystemMetrics(SM_CXSCREEN) / 2;
-						nextY = GetSystemMetrics(SM_CYSCREEN) / 2;
+					if (nextX <= screenLeft || nextY <= screenTop || nextX >= screenRight - 1 || nextY >= screenBottom - 1) {
+						SetCursorPos(GetSystemMetrics(SM_CXSCREEN) / 2, GetSystemMetrics(SM_CYSCREEN) / 2);
 					}
 
-					SetCursorPos(nextX, nextY);
+					INPUT input = { 0 };
+					input.type = INPUT_MOUSE;
+					input.mi.dx = dx;
+					input.mi.dy = dy;
+					input.mi.dwFlags = MOUSEEVENTF_MOVE; // 상대 이동
+					SendInput(1, &input, sizeof(INPUT));
 				}
 				else {
-					// 고정 모드: 왼쪽으로 1px 이동 후, 원래 자리로 복귀
-					SetCursorPos(pos.x - 1, pos.y);
-					SetCursorPos(pos.x, pos.y);
+					INPUT input = { 0 };
+					input.type = INPUT_MOUSE;
+					input.mi.dx = -1; // 왼쪽으로 1px 이동
+					input.mi.dy = 0;
+					input.mi.dwFlags = MOUSEEVENTF_MOVE;
+					SendInput(1, &input, sizeof(INPUT));
+					
+					Sleep(30);
+
+					input.mi.dx = 1; // 다시 오른쪽으로 1px 이동
+					input.mi.dy = 0;
+					SendInput(1, &input, sizeof(INPUT));
 				}
 			}
 			timer = 0.0;
@@ -91,6 +112,7 @@ void AmazingScreenSaver::ProcessAutoMouse(double detaTime) {
 	else {
 		timer = 0.0;
 	}
+	lastPos = InputManagerInstance->GetMousePosition();
 }
 
 void AmazingScreenSaver::InitDeltaTime() {

@@ -10,8 +10,9 @@ private :
 
 	std::unique_ptr<Window> window = nullptr;
 
-	LARGE_INTEGER beforeInterval, currentInterval, frequency;
+	POINT lastPos;
 
+	LARGE_INTEGER beforeInterval, currentInterval, frequency;
 	double timer;
 public :
 	AmazingScreenSaver() = delete;

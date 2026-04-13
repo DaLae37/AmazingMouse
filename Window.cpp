@@ -104,8 +104,10 @@ LRESULT Window::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			else {
 				ModifyMenu(hMenuTray, static_cast<UINT>(TRAY_MENU::ACTIVATE), MF_BYCOMMAND | MF_STRING, static_cast<UINT_PTR>(TRAY_MENU::ACTIVATE), L"대기 중");
 			}
-			int command = TrackPopupMenu(hMenuTray, TPM_RETURNCMD | TPM_NONOTIFY, InputManagerInstance->GetMousePosition().x, InputManagerInstance->GetMousePosition().y, 0, hWnd, nullptr);
 
+			POINT pos = InputManagerInstance->GetMousePosition();
+			int command = TrackPopupMenu(hMenuTray, TPM_RETURNCMD | TPM_NONOTIFY, pos.x, pos.y, 0, hWnd, nullptr);
+			PostMessage(hWnd, WM_NULL, 0, 0);
 			if (command == static_cast<int>(TRAY_MENU::ACTIVATE)) {
 				// 상태 토글
 				isActivate = !isActivate;
@@ -252,6 +254,8 @@ void Window::Activate() {
 	if (!this->isActivate) {
 		this->isActivate = true;
 	}
+	// 화면 안꺼지게 하기
+	SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
 	Hide();
 }
 
@@ -259,6 +263,9 @@ void Window::Deactivate() {
 	if (this->isActivate) {
 		this->isActivate = false;
 	}
+	// 원래 상태로 복구
+	SetThreadExecutionState(ES_CONTINUOUS);
+
 	// 트레이 아이콘 지우기
 	Shell_NotifyIcon(NIM_DELETE, &notifyData);
 
